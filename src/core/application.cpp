@@ -70,6 +70,7 @@ int Application::initWindow(const std::string& title, int x, int y, int width, i
 
 /*
  * Initializes positions and direction of lights;
+ * https://www.khronos.org/registry/OpenGL-Refpages/gl2.1/xhtml/glLight.xml
  */
 void Application::initLights()
 {
@@ -77,43 +78,77 @@ void Application::initLights()
 
 	//glLightModelf( GL_LIGHT_MODEL_LOCAL_VIEWER, 0 );
 	glLightModelf( GL_LIGHT_MODEL_COLOR_CONTROL, GL_SINGLE_COLOR);
-
+	//3 set pointing down lights for one lane
 	glEnable(GL_LIGHT0);
 	glEnable(GL_LIGHT1);
 	glEnable(GL_LIGHT2);
-
-	float ambient[4] = { 0.6, 0.6, 0.6, 1 };
+	//light for pinsets
+	glEnable(GL_LIGHT3);
+	//light for back wall
+	glEnable(GL_LIGHT4);
+	float ambient[4] = { 0.2, 0.2, 0.2, 1 };
 	float diffuse[4] = { 0.8, 0.8, 0.8, 1 };
 	float specular[4] = { 0.7, 0.7, 0.7, 1 };
 	float direction[3] = { 0, -1, 0 };
-	float spot = 75;
-	float position0[4] = { 0, 85, 20, 1 };
-	float position1[4] = { 0, 85, -200, 1 };
-	float position2[4] = { 0, 85, -110, 1 };
-
+	float spot = 45;//spread angle
+	float position0[4] = { 0, 85, 10, 1 };
+	float position1[4] = { 0, 85, -190, 1 };
+	float position2[4] = { 0, 85, -100, 1 };
+	float position3[4] = { 0, 80, -170, 1 };
+	float position4[4] = { 0, 60, -170, 1 };
+	float direction3[3] = { 0, -1, -0.6 };
+	float direction4[3] = { 0, 0.3, -1 };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 1);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 5);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, spot);
 	glLightfv(GL_LIGHT0, GL_POSITION, position0);
+	float ambient1[4] = { 0.2, 0.2, 0.2, 1 };
+	float diffuse1[4] = { 0.8, 0.8, 0.8, 1 };
+	float specular1[4] = { 0.7, 0.7, 0.7, 1 };
 
-	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, specular);
-	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 1);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient1);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, specular1);
+	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 5);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot);
 	glLightfv(GL_LIGHT1, GL_POSITION, position1);
-
-	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse);
-	glLightfv(GL_LIGHT2, GL_SPECULAR, specular);
-	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 1);
+	float ambient2[4] = { 0.2, 0.2, 0.2, 1 };
+	float diffuse2[4] = { 0.8, 0.8, 0.8, 1 };
+	float specular2[4] = { 0.7, 0.7, 0.7, 1 };
+	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient2);
+	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse2);
+	glLightfv(GL_LIGHT2, GL_SPECULAR, specular2);
+	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 5);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, spot);
 	glLightfv(GL_LIGHT2, GL_POSITION, position2);
+
+	float ambient3[4] = { 0.1, 0.1, 0.1, 1 };
+	float diffuse3[4] = { 0.6, 0.6, 0.6, 1 };
+	float specular3[4] = { 0.9, 0.9, 0.9, 1 };
+	glLightfv(GL_LIGHT3, GL_AMBIENT, ambient3);
+	glLightfv(GL_LIGHT3, GL_DIFFUSE, diffuse3);
+	glLightfv(GL_LIGHT3, GL_SPECULAR, specular3);
+	glLightf(GL_LIGHT3, GL_SPOT_EXPONENT, 1);//Effective light intensity is attenuated by the cosine of the angle 
+	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, direction3);
+	glLightf(GL_LIGHT3, GL_SPOT_CUTOFF, 40);
+	glLightfv(GL_LIGHT3, GL_POSITION, position3);
+
+	float ambient4[4] = { 0.1, 0.1, 0.1, 1 };
+	float diffuse4[4] = { 0.6, 0.6, 0.6, 1 };
+	float specular4[4] = { 0.2, 0.2, 0.2, 1 };
+	glLightfv(GL_LIGHT4, GL_AMBIENT, ambient4);
+	glLightfv(GL_LIGHT4, GL_DIFFUSE, diffuse4);
+	glLightfv(GL_LIGHT4, GL_SPECULAR, specular4);
+	glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 1);//Effective light intensity is attenuated by the cosine of the angle 
+	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, direction4);
+	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 50);
+	glLightfv(GL_LIGHT4, GL_POSITION, position4);
+
 }
 
 /**

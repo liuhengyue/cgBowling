@@ -289,7 +289,7 @@ void View::render(Place& place) const
 	Vector3df b = Vector3df(position.x + size.x, position.y, position.z - size.z / 6);
 	Vector3df c = Vector3df(position.x + size.x, position.y, position.z - size.z);
 	Vector3df d = Vector3df(position.x, position.y, position.z - size.z);
-	drawTexturedRectangle(a, b, c, d, normal, place.getTextureIds()[0], 3.0, 3.0);
+	drawTexturedRectangle(a, b, c, d, normal, place.getTextureIds()[0], 1.0, 3.0);//with ucr logo
 
 	normal = Vector3df(0, 1, 0);
 	a = Vector3df(position.x, position.y, position.z);
@@ -298,7 +298,7 @@ void View::render(Place& place) const
 	d = Vector3df(position.x, position.y, position.z - size.z / 6);
 	drawTexturedRectangle(a, b, c, d, normal, place.getTextureIds()[1], 1.0, 3.0);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specularDefault);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseDefault);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseDefault);//plain floor
 
 	//top
 	normal = Vector3df(0, 1, 0);
@@ -308,13 +308,13 @@ void View::render(Place& place) const
 	d = Vector3df(position.x + size.x, position.y + size.y, position.z);
 	drawTexturedRectangle(a, b, c, d, normal, place.getTextureIds()[2], 8.0, 22.0);
 
-	//back
+	//back wall with club banner
 	normal = Vector3df(0, 1, 1);
 	a = Vector3df(position.x, position.y, position.z - size.z);
 	b = Vector3df(position.x, position.y + size.y, position.z - size.z);
 	c = Vector3df(position.x + size.x, position.y + size.y, position.z - size.z);
 	d = Vector3df(position.x + size.x, position.y, position.z - size.z);
-	drawTexturedRectangle(a, b, c, d, normal, place.getTextureIds()[3], 3.0, 1.0);
+	drawTexturedRectangle(a, b, c, d, normal, place.getTextureIds()[3], 1.0, 1.0);
 
 	//front
 	normal = Vector3df(0, 1, -1);
@@ -399,6 +399,11 @@ void View::render(Pin& pin) const
 	gluQuadricTexture(ptr, GL_TRUE);
 
 	glPushMatrix();
+	float specular[] = { 1.8, 1.8, 1.8, 1.0 };
+	float diffuse[] = { 0.4, 0.4, 0.4, 1.0 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 30);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, pin.getTextureIds()[0]);
 	Vector3df position = pin.getPosition();
