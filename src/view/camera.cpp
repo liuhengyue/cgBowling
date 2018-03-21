@@ -15,6 +15,7 @@ float* Camera::toMatrix()
 	return matrix;
 }
 
+//matrix transpose
 float* Camera::toMatrixTPP()
 {
 	float* matrix = new float[16];

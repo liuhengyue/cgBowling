@@ -26,7 +26,7 @@ void PinSet::reset()
 
 	for(Pin& pin : pins)
 		pin.reset();
-
+	//set all pins' positions by the first pin's position (pinset position)
 	pins[0].setPosition(pinPosition);
 
 	pinPosition += move;

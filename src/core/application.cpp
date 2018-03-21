@@ -10,7 +10,7 @@ Application::Application(int* argc, char * argv[])
 	this->model = new Model();
 	this->view = new View();
 	this->controller = new Controller(this);
-
+	this->paused = false;
 	initLights();
 	initCallbacks();
 	initContextMenu();
@@ -22,6 +22,17 @@ Application::Application(int* argc, char * argv[])
 void Application::start()
 {
 	glutMainLoop();
+}
+
+void Application::pause()
+{
+	//invert
+	paused = !paused;
+}
+
+bool Application::isPaused()
+{
+	return paused;
 }
 
 /**
@@ -90,18 +101,18 @@ void Application::initLights()
 	float diffuse[4] = { 0.8, 0.8, 0.8, 1 };
 	float specular[4] = { 0.7, 0.7, 0.7, 1 };
 	float direction[3] = { 0, -1, 0 };
-	float spot = 45;//spread angle
+	float spot = 55;//spread angle
 	float position0[4] = { 0, 85, 10, 1 };
 	float position1[4] = { 0, 85, -190, 1 };
 	float position2[4] = { 0, 85, -100, 1 };
-	float position3[4] = { 0, 80, -170, 1 };
-	float position4[4] = { 0, 60, -170, 1 };
+	float position3[4] = { 0, 80, -200, 1 };
+	float position4[4] = { 0, 24, -230, 1 };
 	float direction3[3] = { 0, -1, -0.6 };
-	float direction4[3] = { 0, 0.3, -1 };
+	float direction4[3] = { 0, 0.0, -1 };
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 5);//Effective light intensity is attenuated by the cosine of the angle 
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 3);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, spot);
 	glLightfv(GL_LIGHT0, GL_POSITION, position0);
@@ -112,7 +123,7 @@ void Application::initLights()
 	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient1);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, diffuse1);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, specular1);
-	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 5);//Effective light intensity is attenuated by the cosine of the angle 
+	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 3);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, spot);
 	glLightfv(GL_LIGHT1, GL_POSITION, position1);
@@ -122,7 +133,7 @@ void Application::initLights()
 	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient2);
 	glLightfv(GL_LIGHT2, GL_DIFFUSE, diffuse2);
 	glLightfv(GL_LIGHT2, GL_SPECULAR, specular2);
-	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 5);//Effective light intensity is attenuated by the cosine of the angle 
+	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 3);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, spot);
 	glLightfv(GL_LIGHT2, GL_POSITION, position2);
@@ -146,7 +157,7 @@ void Application::initLights()
 	glLightfv(GL_LIGHT4, GL_SPECULAR, specular4);
 	glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 1);//Effective light intensity is attenuated by the cosine of the angle 
 	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, direction4);
-	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 50);
+	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 60);
 	glLightfv(GL_LIGHT4, GL_POSITION, position4);
 
 }

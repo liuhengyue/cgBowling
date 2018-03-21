@@ -27,17 +27,20 @@ void resize(int width, int height)
  */
 void display()
 {
-	View & view = application->getView();
-	Model & model = application->getModel();
+	//if not paused
+	if(!application->isPaused()){
+		View & view = application->getView();
+		Model & model = application->getModel();
 
-	model.update();
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
+		model.update();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
 
-	view.render(model);
+		view.render(model);
 
-	glFlush();
-	glutSwapBuffers();
+		glFlush();
+		glutSwapBuffers();
+	}
 	// std::cout << "called" << std::endl;
 	// glutTimerFunc(1000, timerFPS, 2);
 }
@@ -74,13 +77,15 @@ void timer(int value)
 	static unsigned int counter = 0;
 	// std::cout << "FPS: " << FRAME_TIME << std::endl;
 	Model & model = application->getModel();
+	// std::cout << application->isPaused() << " ";
 	// std::cout << counter << std::endl;
 	//wait for a few ms to reset
-	if (model.isAnimating() && model.hasAnimationElapsed() && counter++ > model.WAITING_TIME)
+	if (!application->isPaused() && model.isAnimating() && model.hasAnimationElapsed() && counter++ > model.WAITING_TIME)
 	{
 		counter = 0;
 		model.reset();
 	}
+	// std::cout << application->isPaused() << " ";
 	glutPostRedisplay();
 	glutTimerFunc(1000.0/model.FRAME_TIME, timer, value);
 }

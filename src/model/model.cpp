@@ -33,10 +33,10 @@ Model::Model()
 	normalCamera.setPosition(Vector3df(0.0, 20.0, 25.0));
 	normalCamera.rotateX(-12.0);
 
-	sideCamera.setPosition(Vector3df(-40.0, 35.0, -150.0));
+	sideCamera.setPosition(Vector3df(-42.0, 38.0, -120.0));
 
 	followingCamera.setPosition(Vector3df(0.0, 0.0, 0.0));
-	followingCamera.rotateX(-5.0);
+	// followingCamera.rotateX(-5.0);
 
 	firstThrow = true;
 	reset();
@@ -86,8 +86,9 @@ void Model::update()
 	if (isAnimating())
 	{
 		bowl.rotateY(-rotation / 300);
+		//input is distance, calculate distance by physic equations
 		bowl.moveForward(0.05 * power);
-		bowl.rotX(360 * 0.05 * power / (2 * PI * bowl.getRadius()));
+		bowl.rotX(360 * 0.05 * power / (2 * PI * bowl.getRadius()));//self rotate
 	}
 	//may cause problem
 	if (bowlPosition.z <= placePosition.z - 7 * placeSize.z / 8)
@@ -114,17 +115,22 @@ void Model::collisionBowlPin()
 	for (Pin& pin : place.pinSet.pins)
 	{
 		Vector3df pinPosition = pin.getPosition();
+		// float dist = (pinPosition - bowlPosition).magnitude();
+		// std::cout << "bowlPosition | pinPosition | dist: " << bowlPosition << "  " << pinPosition << "  " <<  dist << std::endl;
 		float dist = distance(Point3df(pinPosition.x, 0.0, pinPosition.z), Point3df(bowlPosition.x, 0.0, bowlPosition.z));
-
+		//determine collision 
 		if (dist < pin.getRadius() + bowl.getRadius())
 		{
-			Vector3df moveVector = Vector3df(pinPosition.x - bowlPosition.x, 0.0, pinPosition.z - bowlPosition.z);
+			//added vertical movement
+			Vector3df moveVector = Vector3df(pinPosition.x - bowlPosition.x, pinPosition.y - bowlPosition.y, pinPosition.z - bowlPosition.z);
 			moveVector.normalize();
-			moveVector = moveVector * (pin.getRadius() + bowl.getRadius() - dist);
-
+			
+			moveVector = moveVector * (pin.getRadius() + bowl.getRadius() - dist) * ((float)power/20);
+			// std::cout << "moveVector: " << moveVector << std::endl;
 			pin.move(moveVector);
-			power *= 0.994;
+			power *= 0.994;//friction
 			pin.rotateZ(-moveVector.x * 8);
+			pin.rotateY(-moveVector.y * 2);
 			pin.rotateX(-moveVector.z * 8);
 			pin.setFalling(true);
 
@@ -149,9 +155,10 @@ void Model::pinFall(Pin& pin) const
 	}
 
 	pin.rotateX(-pin.getRotatedX() * 0.2);
+	pin.rotateY(-pin.getRotatedY() * 0.2);
 	pin.rotateZ(-pin.getRotatedZ() * 0.2);
 
-	if (pin.getRotatedX() < -90 || pin.getRotatedX() > 90)
+	if (pin.getRotatedX() < -85 || pin.getRotatedX() > 85)
 	{
 		int sign = pin.getRotatedX() > 0 ? 1 : -1;
 		pin.rotateX(pin.getRotatedX() - sign * 90);
@@ -159,7 +166,7 @@ void Model::pinFall(Pin& pin) const
 		pin.setHasFallen(true);
 	}
 
-	if (pin.getRotatedZ() < -90 || pin.getRotatedZ() > 90)
+	if (pin.getRotatedZ() < -85 || pin.getRotatedZ() > 85)
 	{
 		int sign = pin.getRotatedZ() > 0 ? 1 : -1;
 		pin.rotateZ(pin.getRotatedZ() - sign * 90);
@@ -225,17 +232,20 @@ void Model::collisionPinPin()
 
 void Model::pinCollision(Pin& a, const Point3df& aPoint, Pin& b, const Point3df& bPoint)
 {
-	if (distance(aPoint, bPoint) < 1.9 * a.getRadius())
+	if (distance(aPoint, bPoint) < 1.8 * a.getRadius())
 	{
 		Vector3df aMoveVector = Vector3df(aPoint.x - bPoint.x, aPoint.y - bPoint.y, aPoint.z - bPoint.z);
 		aMoveVector.normalize();
-		aMoveVector = aMoveVector * float(0.2 * a.getRadius());
-		Vector3df bMoveVector = -aMoveVector;
+		aMoveVector = aMoveVector * float(0.2 * a.getRadius()) * ((float)power/20);
+		//not necessarily equal since loss
+		Vector3df bMoveVector = float(-0.9) * aMoveVector;
 		a.move(aMoveVector);
 		b.move(bMoveVector);
 		a.rotateZ(-aMoveVector.x * 2);
+		a.rotateY(-aMoveVector.y * 0.5);
 		a.rotateX(-aMoveVector.z * 2);
 		b.rotateZ(-bMoveVector.x * 2);
+		b.rotateY(-bMoveVector.y * 0.5);
 		b.rotateX(-bMoveVector.z * 2);
 		a.setFalling(true);
 		b.setFalling(true);
@@ -258,7 +268,7 @@ void Model::collisionBackWall()
 		bowl.rotateY(180 - 2 * atan(lookDirection.x / lookDirection.z) * 180 / PI);
 	}
 }
-
+//left and right lanel gutters
 void Model::collisionGutter()
 {
 	Vector3df bowlPosition = bowl.getPosition();

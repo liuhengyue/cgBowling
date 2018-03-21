@@ -11,6 +11,8 @@ class Bowl: public MovingObject, public TexturizableObject
 		float radius;
 
 	public:
+		Point3df center;//center of mass
+		float mass;
 		Bowl();
 		Bowl(std::vector<std::string> filenames);
 		void reset();

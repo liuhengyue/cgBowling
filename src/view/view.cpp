@@ -26,9 +26,19 @@ void View::render(Model& model) const
 	if (!model.isAnimating())
 	{
 		Vector3df position = model.getBowl().getPosition();
+		position = position + Vector3df(0.0, 0.0, -20.0);
 		Vector3df normal = Vector3df(0.0, 1.0, 0.0);
 		drawArrow(position, normal, model.getPower(), model.getDirection(), model.getRotation());
 	}
+	// unsigned char string[] = "The quick god jumps over the lazy brown fox.";
+	// int w;
+	// w = glutBitmapLength(GLUT_BITMAP_8_BY_13, string);
+	// float x = .5;  Centre in the middle of the window 
+	// glRasterPos2f(x - 800.0 / 2, 0.);
+	// int len = strlen(string);
+	// for (int i = 0; i < len; i++) {
+	//     glutBitmapCharacter(GLUT_BITMAP_8_BY_13, string);
+	// }
 	//renter text
 	
 	// glRasterPos2f(x,y);
@@ -400,7 +410,7 @@ void View::render(Pin& pin) const
 
 	glPushMatrix();
 	float specular[] = { 1.8, 1.8, 1.8, 1.0 };
-	float diffuse[] = { 0.4, 0.4, 0.4, 1.0 };
+	float diffuse[] = { 0.6, 0.6, 0.6, 1.0 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 30);
@@ -426,12 +436,13 @@ void View::render(Pin& pin) const
 	{
 		glBegin(GL_QUAD_STRIP);
 
-		for (float angle = 0.0; angle <= 360; angle += 22.5)
+		for (float angle = 0.0; angle <= 360; angle += 22.5)//22.5 - 16 points
 		{
 			Point3df point = pin.contour[i];
 			point.rotateY(angle);
+			//should set norm correctly
 			glNormal3f(point.x, point.z, point.z);
-			glTexCoord2f(angle / 360, point.y / pin.getHeight());
+			glTexCoord2f(angle / 360, point.y / pin.getHeight());//set the texture point
 			glVertex3f(point.x, point.y, point.z);
 
 			point = pin.contour[i + 1];

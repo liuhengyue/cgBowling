@@ -45,6 +45,11 @@ void Controller::keyPressed(unsigned char key)
 		{
 			application->exit();
 		}
+		
+		else if (key == 32)//SPACEBAR key
+		{
+			application->pause();
+		}
 		return;
 	}
 
@@ -66,16 +71,20 @@ void Controller::keyPressed(unsigned char key)
 			application->getModel().setRotation(LEFT);
 			break;
 
-		case 13:
+		case 32://SPACEBAR key
+			application->pause();
+			break;
+
+		case 13://Enter key
 			application->getModel().startAnimation();
 			break;
 
-		case 27:
+		case 27:// Escape key
 			application->exit();
 			break;
 	}
 }
-
+//https://www.opengl.org/resources/libraries/glut/spec3/node54.html
 void Controller::specialKeyPressed(int key)
 {
 	if (application->getModel().isAnimating())

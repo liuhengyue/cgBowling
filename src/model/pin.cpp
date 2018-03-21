@@ -6,7 +6,7 @@ const std::vector<Point3df> Pin::contour =
 	Point3df(0.707,		0.45,		0.0),
 	Point3df(0.9765,	1.35,		0.0),
 	Point3df(1.1275,	2.025,		0.0),
-	Point3df(1.19,		2.7, 		0.0),
+	Point3df(1.18,		2.7, 		0.0),
 	Point3df(1.14075,	3.525,		0.0),
 	Point3df(0.92575,	4.35,		0.0),
 	Point3df(0.568,		5.175, 		0.0),
@@ -24,15 +24,47 @@ const std::vector<Point3df> Pin::contour =
 
 Pin::Pin()
 {
-	this->radius = 1.19;
+	this->radius = 1.18;
 	this->height = 9.0;
+	this->center = Point3df(0.0, 0.0, 0.0);
+	this->mass = 1;
+	//center of mass
+	float volume = 0.0;
+	for (int i = 0; i < this->contour.size(); ++i)
+	{
+		volume += PI*this->contour[i].x * this->contour[i].x;
+
+	}
+	for (int i = 0; i < this->contour.size(); ++i)
+	{
+		//area
+		float area = PI*this->contour[i].x * this->contour[i].x;
+		this->center.y += this->contour[i].y* (area/volume) * (1/this->mass);
+
+	}
 	reset();
 }
 
 Pin::Pin(std::vector<std::string> filenames): TexturizableObject(filenames)
 {
-	this->radius = 1.19;
+	this->radius = 1.18;
 	this->height = 9.0;
+	this->mass = 1;
+	this->center = Point3df(0.0, 0.0, 0.0);
+	//center of mass
+	float volume = 0.0;
+	for (int i = 0; i < this->contour.size(); ++i)
+	{
+		volume += PI*this->contour[i].x * this->contour[i].x;
+
+	}
+	for (int i = 0; i < this->contour.size(); ++i)
+	{
+		//area
+		float area = PI*this->contour[i].x * this->contour[i].x;
+		this->center.y += this->contour[i].y* (area/volume) * (1/this->mass);
+
+	}
 	reset();
 }
 

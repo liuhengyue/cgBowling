@@ -12,6 +12,7 @@ class Application
 		Model * model;
 		View * view;
 		Controller * controller;
+		bool paused;
 		int windowID;
 
 		int initWindow(const std::string & title, int x, int y, int width, int height);
@@ -22,7 +23,9 @@ class Application
 	public:
 		Application(int * argc, char * argv[]);
 		void start();
+		void pause();//pause the animation
 		void exit();
+		bool isPaused();
 		Controller & getController();
 		View & getView();
 		Model & getModel();

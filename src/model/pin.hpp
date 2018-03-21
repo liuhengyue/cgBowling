@@ -10,14 +10,14 @@ class Pin: public MovingObject, public TexturizableObject
 	private:
 		float radius;
 		float height;
-
 		bool falling;
 		bool fallen;
 		bool visible;
 
 	public:
 		static const std::vector<Point3df> contour;
-
+		Point3df center;//center of mass
+		float mass;
 		Pin();
 		Pin(std::vector<std::string> filenames);
 		void reset();
